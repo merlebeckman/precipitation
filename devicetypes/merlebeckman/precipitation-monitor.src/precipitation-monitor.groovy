@@ -12,15 +12,12 @@
  *
  */
 metadata {
-    // Automatically generated. Make future change here.
     definition (name: "Precipitation Monitor", namespace: "merlebeckman", author: "Jim Beckman") {
         capability "Temperature Measurement"
         capability "Switch Level"
         capability "Sensor"
         capability "Health Check"
 
-        command "up"
-        command "down"
         command "setTemperature", ["number"]
     }
 
@@ -39,14 +36,9 @@ metadata {
                 ]
             )
         }
-        standardTile("up", "device.temperature", inactiveLabel: false, decoration: "flat") {
-            state "default", label:'up', action:"up"
-        }
-        standardTile("down", "device.temperature", inactiveLabel: false, decoration: "flat") {
-            state "default", label:'down', action:"down"
-        }
+
         main "temperature"
-        details("temperature","up","down")
+        details("temperature")
     }
 }
 
@@ -75,14 +67,6 @@ def initialize() {
 
 def setLevel(value) {
     setTemperature(value)
-}
-
-def up() {
-    setTemperature(getTemperature() + 1)
-}
-
-def down() {
-    setTemperature(getTemperature() - 1)
 }
 
 def setTemperature(value) {
