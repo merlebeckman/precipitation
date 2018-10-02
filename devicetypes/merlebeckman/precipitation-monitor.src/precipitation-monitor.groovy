@@ -13,6 +13,7 @@
  */
 metadata {
     definition (name: "Precipitation Monitor", namespace: "merlebeckman", author: "Jim Beckman") {
+        capability "Polling"
         attribute "Daily Precipitation", "number"
         command "setDailyPrecipitation", ["number"]  
         attribute "Yesterday Precipitation", "number"
