@@ -17,15 +17,19 @@ metadata {
         capability "Sensor"
         capability "Health Check"
         attribute "Daily Precipitation", "number"
-        command "setDailyPrecipitation", ["number"]
+        command "setDailyPrecipitation", ["number"]  
+        attribute "Yesterday Precipitation", "number"
+        command "setYesterdayPrecipitation", ["number"]          
     }
 
     // UI tile definitions
-    tiles {
-        valueTile("dailyprecipitation", "device.dailyprecipitation", width: 2, height: 2) {
-            state("val", label:'Daily Precipitation: ${currentValue}',  backgroundColor: "#e86d13", defaultState: true)
+    tiles (scale: 2) {
+        valueTile("dailyprecipitation", "device.dailyprecipitation", width: 6, height: 6) {
+            state("val", label:'Today: ${currentValue}',  backgroundColor: "#00a0dc", defaultState: true)
         }
-
+        valueTile("yesterdayprecipitation", "device.yesterdayprecipitation", width: 6, height: 2) {
+            state("val", label:'Yesterday: ${currentValue}')
+        }
         //main "dailyprecipitation"
         //details("dailyprecipitation")
     }
@@ -48,24 +52,34 @@ def updated() {
 def initialize() {
     sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
     sendEvent(name: "healthStatus", value: "online")
-    //sendEvent(name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false)
     if (!device.currentState("dailyprecipitation")) {
         setDailyPrecipitation(getDailyPrecipitation())
     }
-    //sendEvent(name: "dailyprecipitation", value: 22.01)
+    if (!device.currentState("yesterdayprecipitation")) {
+        setYesterdayPrecipitation(getYesterdayPrecipitation())
+    }
 }
 
-def setLevel(value) {
+/*def setLevel(value) {
     setDailyPrecipitation(value)
-}
+}*/
 
 def setDailyPrecipitation(value) {
     sendEvent(name:"dailyprecipitation", value: value)
 }
 
+def setYesterdayPrecipitation(value) {
+    sendEvent(name:"yesterdayprecipitation", value: value)
+}
 
 private getDailyPrecipitation() {
     def ts = device.currentState("dailyprecipitation")
-    Float value = ts ? ts.floatValue : 21.01
+    Float value = ts ? ts.floatValue : 0.00
+    return value
+}
+
+private getYesterdayPrecipitation() {
+    def ts = device.currentState("yesterdayprecipitation")
+    Float value = ts ? ts.floatValue : 0.00
     return value
 }
