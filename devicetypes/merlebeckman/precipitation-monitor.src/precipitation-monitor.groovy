@@ -13,9 +13,6 @@
  */
 metadata {
     definition (name: "Precipitation Monitor", namespace: "merlebeckman", author: "Jim Beckman") {
-        capability "Switch Level"
-        capability "Sensor"
-        capability "Health Check"
         attribute "Daily Precipitation", "number"
         command "setDailyPrecipitation", ["number"]  
         attribute "Yesterday Precipitation", "number"
@@ -50,8 +47,6 @@ def updated() {
 }
 
 def initialize() {
-    sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
-    sendEvent(name: "healthStatus", value: "online")
     if (!device.currentState("dailyprecipitation")) {
         setDailyPrecipitation(getDailyPrecipitation())
     }
@@ -59,10 +54,6 @@ def initialize() {
         setYesterdayPrecipitation(getYesterdayPrecipitation())
     }
 }
-
-/*def setLevel(value) {
-    setDailyPrecipitation(value)
-}*/
 
 def setDailyPrecipitation(value) {
     sendEvent(name:"dailyprecipitation", value: value)
